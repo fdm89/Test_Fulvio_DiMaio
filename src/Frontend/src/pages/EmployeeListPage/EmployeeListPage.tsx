@@ -11,6 +11,7 @@ import {
     tableCellClasses,
     CircularProgress,
     Box,
+    TablePagination
   } from "@mui/material";
 import { useEffect, useState } from "react";
 import employeeService from "../../services/employee-service";
@@ -20,6 +21,8 @@ export default function EmployeeListPage() {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10); 
 
     useEffect(() => {
         setIsLoading(true);
@@ -39,6 +42,15 @@ export default function EmployeeListPage() {
         };
         fetchEmployees();
     }, []);
+
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+      };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+      };  
 
     if (isLoading) {
         return (
@@ -84,7 +96,7 @@ export default function EmployeeListPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {employees.map((row) => (
+            {employees.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -102,6 +114,15 @@ export default function EmployeeListPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={employees.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 }
