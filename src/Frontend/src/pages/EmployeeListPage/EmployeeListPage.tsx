@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import employeeService from "../../services/employee-service";
 import { Employee } from "../../types";
+import ExportButton from "../../components";
 
 export default function EmployeeListPage() {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -123,6 +124,9 @@ export default function EmployeeListPage() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Box mb={3}>
+        <ExportButton employees={employees}/>
+      </Box>
     </>
   );
 }
