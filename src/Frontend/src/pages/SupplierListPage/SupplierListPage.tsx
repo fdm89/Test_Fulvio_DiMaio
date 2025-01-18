@@ -9,29 +9,58 @@ import {
   Typography,
   styled,
   tableCellClasses,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-
-interface SupplierListQuery {
-  id: number;
-  name: string;
-  address: string;
-  email: string;
-  phone: string;
-}
+import { SupplierListQuery } from "../../types";
+import supplierService from "../../services/supplier-service";
 
 export default function SupplierListPage() {
   const [list, setList] = useState<SupplierListQuery[]>([]);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/suppliers/list")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setList(data as SupplierListQuery[]);
-      });
+    setLoading(true);
+    const fetchSuppliers = async () => {
+      try {
+        const response = await supplierService.getAllSuppliers();
+        if (response) setList(response as SupplierListQuery[]);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error while fetching Data:", error);
+          setError(error.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSuppliers();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh"
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
+        {`An error occurred: ${error}`}
+      </Typography>
+    );
+  }
 
   return (
     <>
