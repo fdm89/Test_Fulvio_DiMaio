@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "../pages/HomePage";
-import CustomerListPage from "../pages/CustomerListPage";
-import EmployeeListPage from "../pages/EmployeeListPage";
-import SupplierListPage from "../pages/SupplierListPage";
+import HomePage from "../pages/HomePage/HomePage";
+import CustomerListPage from "../pages/CustomerListPage/CustomerListPage";
+import EmployeeListPage from "../pages/EmployeeListPage/EmployeeListPage";
+import SupplierListPage from "../pages/SupplierListPage/SupplierListPage";
 
 export default function AppRoutes() {
   return (
@@ -15,3 +15,4 @@ export default function AppRoutes() {
     </Routes>
   );
 }
+
