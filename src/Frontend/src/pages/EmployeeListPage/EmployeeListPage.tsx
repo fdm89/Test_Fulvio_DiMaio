@@ -16,7 +16,8 @@ import {
 import { useEffect, useState } from "react";
 import employeeService from "../../services/employee-service";
 import { Employee } from "../../types";
-import ExportButton from "../../components";
+import ExportButton from "../../components/ExportButton";
+import FilterComponent from "../../components/FilterComponent";
 
 export default function EmployeeListPage() {
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -25,22 +26,22 @@ export default function EmployeeListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); 
 
+    const fetchEmployees = async (firstName?: string, lastName?: string) => {
+      setIsLoading(true);
+      try {
+        const result = await employeeService.getAllEmployees(firstName, lastName);
+        setEmployees(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error while fetching Data:", error);
+          setError(error.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     useEffect(() => {
-        setIsLoading(true);
-        const fetchEmployees = async () => {
-            try {
-                const result = await employeeService.getAllEmployees();
-                console.log(result);
-                setEmployees(result);
-            } catch (error) {
-              if (error instanceof Error) {
-                    console.error("Error while fetching Data:", error);
-                    setError(error.message);
-                  }
-            } finally {
-                setIsLoading(false);
-            }
-        };
         fetchEmployees();
     }, []);
 
@@ -81,6 +82,10 @@ export default function EmployeeListPage() {
         <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Employees
       </Typography>
+
+      <Box mb={3}>
+        <FilterComponent onFilter={fetchEmployees} />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

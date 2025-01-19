@@ -7,10 +7,10 @@ class EmployeeService {
     async getAllEmployees(firstName?: string, lastName?: string): Promise <Employee[]> {
         let requestUrl = `api/employees/list`;
         if(firstName){
-            requestUrl += `&FirstName=${firstName}`
+            requestUrl += `?&FirstName=${firstName}`
         }
         if(lastName){
-            requestUrl += `&LastName=${lastName}`
+            requestUrl += `?&LastName=${lastName}`
         }
        
         const response = await fetch(requestUrl);

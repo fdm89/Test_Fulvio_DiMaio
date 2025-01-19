@@ -1,11 +1,11 @@
 import {Button} from "@mui/material";
-import { Employee } from "../types";
+import { Employee } from "../../types";
 
-interface Props {
+interface ButtonProps {
     employees: Employee[]
 }
 
-export default function ExportButton ({employees}: Props) {
+export default function ExportButton ({employees}: ButtonProps) {
 
     const exportXML = () => {
         
